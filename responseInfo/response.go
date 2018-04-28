@@ -3,7 +3,7 @@ package responseInfo
 import (
 	"reflect"
 
-	page "gitee.com/k2tf/utils/pageInfo"
+	page "github.com/Tsui89/utils/pageInfo"
 	"github.com/gin-gonic/gin"
 )
 
