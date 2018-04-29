@@ -1,33 +1,33 @@
 package adapter
 
 import (
-	"github.com/go-xorm/xorm"
-	"github.com/lib/pq"
 	"fmt"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 type Adapter struct {
 	driverName     string
 	dataSourceName string
 	dbName         string
-	createTables   []string
-	engine         *xorm.Engine
+	//createTables   []string
+	engine *gorm.DB
 }
 
 func finalizer(a *Adapter) {
 	a.engine.Close()
 }
 
-func NewEngine(driverName, dataSourceName, dbName string, createTables []string) *xorm.Engine {
+func NewEngine(driverName, dataSourceName, dbName string) *gorm.DB {
 	a := &Adapter{}
 	a.driverName = driverName
 	a.dataSourceName = dataSourceName
 	a.dbName = dbName
-	a.createTables = createTables
+	//a.createTables = createTables
 
 	// Open the DB, create it if not existed.
 	a.open()
-
 	// Call the destructor when the object is released.
 	//runtime.SetFinalizer(a, finalizer)
 
@@ -36,11 +36,11 @@ func NewEngine(driverName, dataSourceName, dbName string, createTables []string)
 
 func (a *Adapter) createDatabase() error {
 	var err error
-	var engine *xorm.Engine
+	var engine *gorm.DB
 	if a.driverName == "postgres" {
-		engine, err = xorm.NewEngine(a.driverName, a.dataSourceName+" dbname=postgres")
+		engine, err = gorm.Open(a.driverName, a.dataSourceName+" dbname=postgres")
 	} else {
-		engine, err = xorm.NewEngine(a.driverName, a.dataSourceName)
+		engine, err = gorm.Open(a.driverName, a.dataSourceName)
 	}
 	if err != nil {
 		return err
@@ -48,48 +48,39 @@ func (a *Adapter) createDatabase() error {
 	defer engine.Close()
 
 	if a.driverName == "postgres" {
-		if _, err = engine.Exec(fmt.Sprintf("CREATE DATABASE %s ;"), a.dbName); err != nil {
-			// 42P04 is	duplicate_database
-			if err.(*pq.Error).Code == "42P04" {
-				return nil
-			}
-		}
+		engine.Exec(fmt.Sprintf("CREATE DATABASE %s ;"), a.dbName)
 	} else {
-		_, err = engine.Exec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s DEFAULT CHARSET utf8 COLLATE utf8_general_ci;", a.dbName))
+		engine.Exec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s DEFAULT CHARSET utf8 COLLATE utf8_general_ci;", a.dbName))
 	}
 	return err
 }
 
 func (a *Adapter) open() {
 	var err error
-	var engine *xorm.Engine
+	var engine *gorm.DB
 
 	if err = a.createDatabase(); err != nil {
 		panic(err)
 	}
 
 	if a.driverName == "postgres" {
-		engine, err = xorm.NewEngine(a.driverName, a.dataSourceName+fmt.Sprintf(" dbname=%s", a.dbName))
+		engine, err = gorm.Open(a.driverName, a.dataSourceName+fmt.Sprintf(" dbname=%s", a.dbName))
 	} else {
-		engine, err = xorm.NewEngine(a.driverName, a.dataSourceName+a.dbName)
+		engine, err = gorm.Open(a.driverName, a.dataSourceName+a.dbName)
 	}
 	if err != nil {
 		panic(err)
 	}
 
 	a.engine = engine
-	err = a.engine.Ping()
-	if err != nil {
-		panic(err)
-	}
-	a.createTable()
 }
 
-func (a *Adapter) createTable() {
-	for _, s := range a.createTables {
-		_, err := a.engine.Exec(s)
-		if err != nil {
-			panic(err)
-		}
-	}
-}
+//
+//func (a *Adapter) createTable() {
+//	for _, s := range a.createTables {
+//		_, err := a.engine.Exec(s)
+//		if err != nil {
+//			panic(err)
+//		}
+//	}
+//}
