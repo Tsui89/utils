@@ -66,7 +66,7 @@ func (a *Adapter) open() {
 	if a.driverName == "postgres" {
 		engine, err = gorm.Open(a.driverName, a.dataSourceName+fmt.Sprintf(" dbname=%s", a.dbName))
 	} else {
-		engine, err = gorm.Open(a.driverName, a.dataSourceName+a.dbName)
+		engine, err = gorm.Open(a.driverName, a.dataSourceName+a.dbName+"?charset=utf8&parseTime=True&loc=Local")
 	}
 	if err != nil {
 		panic(err)
