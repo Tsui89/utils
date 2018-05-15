@@ -9,17 +9,19 @@ import (
 )
 
 type PageInfo struct {
-	Size      int `json:"size"`       //当前页大小
-	TotalSize int `json:"total"` //总大小
-	TotalPage int `json:"pages"` //总页数
-	Page      int `json:"pageNum"`       //当前页
-	PerPage   int `json:"pageSize"`   //每页多少
+	Size      int `json:"size"`     //当前页大小
+	TotalSize int `json:"total"`    //总大小
+	TotalPage int `json:"pages"`    //总页数
+	Page      int `json:"pageNum"`  //当前页
+	PerPage   int `json:"pageSize"` //每页多少
 }
 
 func NewPageInfo(req *http.Request) *PageInfo {
 	perPage, err := strconv.Atoi(req.FormValue("pageSize"))
-	if err != nil || perPage <= 0 {
+	if err != nil || perPage == 0 {
 		perPage = 20
+	} else if perPage < 0 {
+		perPage = -1
 	}
 	page, err := strconv.Atoi(req.FormValue("pageNum"))
 	if err != nil || page <= 0 {

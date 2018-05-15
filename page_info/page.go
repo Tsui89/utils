@@ -18,8 +18,10 @@ type PageInfo struct {
 
 func NewPageInfo(req *http.Request) *PageInfo {
 	perPage, err := strconv.Atoi(req.FormValue("per_page"))
-	if err != nil || perPage <= 0 {
+	if err != nil || perPage == 0 {
 		perPage = 20
+	} else if perPage < 0 {
+		perPage = -1
 	}
 	page, err := strconv.Atoi(req.FormValue("page"))
 	if err != nil || page <= 0 {
