@@ -35,6 +35,9 @@ func NewPageInfo(req *http.Request) *PageInfo {
 
 func (p *PageInfo) SetTotalPage() {
 	p.TotalPage = int(math.Ceil(float64(p.TotalSize) / float64(p.PerPage)))
+	if p.TotalPage <=0{
+		p.TotalPage = 1
+	}
 }
 
 func (p *PageInfo) PageCheck() error {
