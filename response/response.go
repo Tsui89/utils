@@ -3,7 +3,7 @@ package response
 import (
 	"reflect"
 
-	"gitee.com/k2tf/utils/page"
+	page "github.com/Tsui89/utils/page_info"
 	"github.com/gin-gonic/gin"
 )
 
