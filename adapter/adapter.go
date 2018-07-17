@@ -48,9 +48,9 @@ func (a *Adapter) createDatabase() error {
 	defer engine.Close()
 
 	if a.driverName == "postgres" {
-		engine.Exec(fmt.Sprintf("CREATE DATABASE %s ;"), a.dbName)
+		err = engine.Exec(fmt.Sprintf("CREATE DATABASE %s ;", a.dbName)).Error
 	} else {
-		engine.Exec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s DEFAULT CHARSET utf8 COLLATE utf8_general_ci;", a.dbName))
+		err = engine.Exec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s DEFAULT CHARSET utf8 COLLATE utf8_general_ci;", a.dbName)).Error
 	}
 	return err
 }
