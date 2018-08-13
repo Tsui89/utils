@@ -26,13 +26,13 @@ func (br *BaseResponse) Set(code int, message string) {
 
 type ListResponse struct {
 	BaseResponse
-	PageInfo page.PageInfo `json:"pages"`
+	PageInfo page.PageInfo `json:"pageInfo"`
 	Data     interface{}   `json:"data"`
 }
 
 type ListNoneResponse struct {
 	BaseResponse
-	PageInfo page.PageInfo `json:"pages"`
+	PageInfo page.PageInfo `json:"pageInfo"`
 	Data     []interface{} `json:"data"`
 }
 
