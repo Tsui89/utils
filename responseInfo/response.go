@@ -10,12 +10,14 @@ import (
 type BaseResponse struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
+	Info    string `json:"info"`
 }
 
 func NewBaseResponse() *BaseResponse {
 	b := BaseResponse{
 		0,
 		"success",
+		"成功",
 	}
 	return &b
 }
@@ -38,14 +40,13 @@ type ListNoneResponse struct {
 
 type ListNoneWithoutPageResponse struct {
 	BaseResponse
-	Data     []interface{} `json:"data"`
+	Data []interface{} `json:"data"`
 }
 
 type ListWithoutPageResponse struct {
 	BaseResponse
-	Data     interface{} `json:"data"`
+	Data interface{} `json:"data"`
 }
-
 
 type DataResponse struct {
 	BaseResponse

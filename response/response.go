@@ -10,12 +10,14 @@ import (
 type BaseResponse struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
+	Info string `json:"info"`
 }
 
 func NewBaseResponse() *BaseResponse {
 	b := BaseResponse{
 		0,
 		"success",
+		"成功",
 	}
 	return &b
 }
