@@ -21,9 +21,10 @@ func NewBaseResponse() *BaseResponse {
 	}
 	return &b
 }
-func (br *BaseResponse) Set(code int, message string) {
+func (br *BaseResponse) Set(code int, message, info string) {
 	br.Code = code
 	br.Message = message
+	br.Info = info
 }
 
 type ListResponse struct {
