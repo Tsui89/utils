@@ -16,7 +16,7 @@ type BaseResponse struct {
 
 func NewBaseResponse() *BaseResponse {
 	b := BaseResponse{
-		br.HttpCode,
+		200,
 		0,
 		"success",
 		"成功",
