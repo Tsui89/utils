@@ -16,7 +16,7 @@ type BaseResponse struct {
 
 func NewBaseResponse() *BaseResponse {
 	b := BaseResponse{
-		200,
+		br.HttpCode,
 		0,
 		"success",
 		"成功",
@@ -59,13 +59,13 @@ type DataResponse struct {
 func ResponseList(c *gin.Context, data interface{}, info page.PageInfo, br BaseResponse) {
 
 	if isNotNull(data) {
-		c.JSON(200, ListResponse{
+		c.JSON(br.HttpCode, ListResponse{
 			br,
 			info,
 			data,
 		})
 	} else {
-		c.JSON(200, ListNoneResponse{
+		c.JSON(br.HttpCode, ListNoneResponse{
 			br,
 			info,
 			[]interface{}{},
@@ -76,12 +76,12 @@ func ResponseList(c *gin.Context, data interface{}, info page.PageInfo, br BaseR
 func ResponseListWithotPage(c *gin.Context, data interface{}, br BaseResponse) {
 
 	if isNotNull(data) {
-		c.JSON(200, ListWithoutPageResponse{
+		c.JSON(br.HttpCode, ListWithoutPageResponse{
 			br,
 			data,
 		})
 	} else {
-		c.JSON(200, ListNoneWithoutPageResponse{
+		c.JSON(br.HttpCode, ListNoneWithoutPageResponse{
 			br,
 			[]interface{}{},
 		})
@@ -94,19 +94,19 @@ func ResponseData(c *gin.Context, data interface{}, br BaseResponse) {
 		data = map[string]interface{}{}
 	}
 	if isNotNull(data) {
-		c.JSON(200, DataResponse{
+		c.JSON(br.HttpCode, DataResponse{
 			br,
 			data,
 		})
 	} else {
-		c.JSON(200, DataResponse{
+		c.JSON(br.HttpCode, DataResponse{
 			br,
 			map[string]interface{}{},
 		})
 	}
 }
 func ResponseWithoutData(c *gin.Context, br BaseResponse) {
-	c.JSON(200, br)
+	c.JSON(br.HttpCode, br)
 }
 func isNotNull(i interface{}) bool {
 	if i == nil {

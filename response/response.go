@@ -3,18 +3,20 @@ package response
 import (
 	"reflect"
 
-	page "github.com/Tsui89/utils/page_info"
+	"github.com/Tsui89/utils/page_info"
 	"github.com/gin-gonic/gin"
 )
 
 type BaseResponse struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
-	Info string `json:"info"`
+	HttpCode int    `json:"-"`
+	Code     int    `json:"code"`
+	Message  string `json:"message"`
+	Info     string `json:"info"`
 }
 
 func NewBaseResponse() *BaseResponse {
 	b := BaseResponse{
+		br.HttpCode,
 		0,
 		"success",
 		"成功",
@@ -41,14 +43,13 @@ type ListNoneResponse struct {
 
 type ListNoneWithoutPageResponse struct {
 	BaseResponse
-	Data     []interface{} `json:"data"`
+	Data []interface{} `json:"data"`
 }
 
 type ListWithoutPageResponse struct {
 	BaseResponse
-	Data     interface{} `json:"data"`
+	Data interface{} `json:"data"`
 }
-
 
 type DataResponse struct {
 	BaseResponse
@@ -58,13 +59,13 @@ type DataResponse struct {
 func ResponseList(c *gin.Context, data interface{}, info page.PageInfo, br BaseResponse) {
 
 	if isNotNull(data) {
-		c.JSON(0, ListResponse{
+		c.JSON(br.HttpCode, ListResponse{
 			br,
 			info,
 			data,
 		})
 	} else {
-		c.JSON(0, ListNoneResponse{
+		c.JSON(br.HttpCode, ListNoneResponse{
 			br,
 			info,
 			[]interface{}{},
@@ -75,12 +76,12 @@ func ResponseList(c *gin.Context, data interface{}, info page.PageInfo, br BaseR
 func ResponseListWithotPage(c *gin.Context, data interface{}, br BaseResponse) {
 
 	if isNotNull(data) {
-		c.JSON(0, ListWithoutPageResponse{
+		c.JSON(br.HttpCode, ListWithoutPageResponse{
 			br,
 			data,
 		})
 	} else {
-		c.JSON(0, ListNoneWithoutPageResponse{
+		c.JSON(br.HttpCode, ListNoneWithoutPageResponse{
 			br,
 			[]interface{}{},
 		})
@@ -93,18 +94,20 @@ func ResponseData(c *gin.Context, data interface{}, br BaseResponse) {
 		data = map[string]interface{}{}
 	}
 	if isNotNull(data) {
-		c.JSON(0, DataResponse{
+		c.JSON(br.HttpCode, DataResponse{
 			br,
 			data,
 		})
 	} else {
-		c.JSON(0, DataResponse{
+		c.JSON(br.HttpCode, DataResponse{
 			br,
 			map[string]interface{}{},
 		})
 	}
 }
-
+func ResponseWithoutData(c *gin.Context, br BaseResponse) {
+	c.JSON(br.HttpCode, br)
+}
 func isNotNull(i interface{}) bool {
 	if i == nil {
 		return false
