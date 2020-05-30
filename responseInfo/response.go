@@ -23,7 +23,8 @@ func NewBaseResponse() *BaseResponse {
 	}
 	return &b
 }
-func (br *BaseResponse) Set(code int, message, info string) {
+func (br *BaseResponse) Set(httpCode int, code int, message, info string) {
+	br.HttpCode = httpCode
 	br.Code = code
 	br.Message = message
 	br.Info = info
