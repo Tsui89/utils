@@ -49,6 +49,9 @@ func (p *PageInfo) PageCheck() error {
 
 func (p *PageInfo) SetTotalSize(totalSize int) {
 	p.Total = totalSize
+	if p.PageSize == -1 {
+		p.PageSize = p.Total
+	}
 }
 
 func (p *PageInfo) SetSize(size int) {

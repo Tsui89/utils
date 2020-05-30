@@ -9,11 +9,11 @@ import (
 )
 
 type PageInfo struct {
-	Size      int `json:"size"`       //当前页大小
-	Total int `json:"total"` //总大小
-	Pages int `json:"pages"` //总页数
-	PageNum      int `json:"page_num"`       //当前页
-	PageSize   int `json:"page_size"`   //每页多少
+	Size     int `json:"size"`      //当前页大小
+	Total    int `json:"total"`     //总大小
+	Pages    int `json:"pages"`     //总页数
+	PageNum  int `json:"page_num"`  //当前页
+	PageSize int `json:"page_size"` //每页多少
 }
 
 func NewPageInfo(req *http.Request) *PageInfo {
@@ -35,7 +35,7 @@ func NewPageInfo(req *http.Request) *PageInfo {
 
 func (p *PageInfo) SetTotalPage() {
 	p.Pages = int(math.Ceil(float64(p.Total) / float64(p.PageSize)))
-	if p.Pages <=0{
+	if p.Pages <= 0 {
 		p.Pages = 1
 	}
 }
@@ -49,6 +49,9 @@ func (p *PageInfo) PageCheck() error {
 
 func (p *PageInfo) SetTotalSize(totalSize int) {
 	p.Total = totalSize
+	if p.PageSize == -1 {
+		p.PageSize = p.Total
+	}
 }
 
 func (p *PageInfo) SetSize(size int) {
